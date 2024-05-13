@@ -39,7 +39,7 @@ async function addContact(name, email, phone) {
 async function updateContactById(id, newContact) {
   const index = contacts.findIndex((contact) => contact.id === id);
   if (index === -1) {
-    throw new Error("Contact not found");
+    return null;
   }
 
   const oldContact = contacts[index];
