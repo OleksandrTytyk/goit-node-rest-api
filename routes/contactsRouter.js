@@ -6,17 +6,18 @@ import {
   createContact,
   updateContact,
 } from "../controllers/contactsControllers.js";
+const jsonParcer = express.json();
 
 const contactsRouter = express.Router();
 
-contactsRouter.get("/", getAllContacts);
+contactsRouter.get("/", jsonParcer, getAllContacts);
 
-contactsRouter.get("/:id", getOneContact);
+contactsRouter.get("/:id", jsonParcer, getOneContact);
 
-contactsRouter.delete("/:id", deleteContact);
+contactsRouter.delete("/:id", jsonParcer, deleteContact);
 
-contactsRouter.post("/", createContact);
+contactsRouter.post("/", jsonParcer, createContact);
 
-contactsRouter.put("/:id", updateContact);
+contactsRouter.put("/:id", jsonParcer, updateContact);
 
 export default contactsRouter;

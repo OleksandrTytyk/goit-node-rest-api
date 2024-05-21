@@ -5,11 +5,10 @@ const DB_URI = process.env.DB_URI;
 async function connect() {
   try {
     await mongoose.connect(DB_URI);
-    console.log("Database connected...");
+    console.log("Database connection successful");
   } catch (error) {
     console.error(error);
-  } finally {
-    await mongoose.disconnect();
+    process.exit(1);
   }
 }
 
