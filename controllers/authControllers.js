@@ -26,3 +26,30 @@ export const register = async (req, res, next) => {
     next(error);
   }
 };
+
+export const login = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    const findUserByEmail = await User.findOne({ email });
+
+    if (findUserByEmail === null) {
+      return res.status(401).send({ message: "Email or password is wrong" });
+    }
+
+    const passwordCompare = await bcrypt.compare(
+      password,
+      findUserByEmail.password
+    );
+
+    if (!passwordCompare) {
+      return res.status(401).send({ message: "Email or password is wrong" });
+    }
+
+    res
+      .status(200)
+      .send({ message: `User ${findUserByEmail.email} logged in` });
+  } catch (error) {
+    next(error);
+  }
+};
