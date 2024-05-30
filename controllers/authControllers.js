@@ -1,5 +1,6 @@
 import User from "../models/user.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 import HttpError from "../helpers/HttpError.js";
 
@@ -46,9 +47,17 @@ export const login = async (req, res, next) => {
       return res.status(401).send({ message: "Email or password is wrong" });
     }
 
+    const token = jwt.sign(
+      {
+        id: findUserByEmail._id,
+        email: findUserByEmail.email,
+      },
+      process.env.JWT_SECRET
+    );
+
     res
       .status(200)
-      .send({ message: `User ${findUserByEmail.email} logged in` });
+      .send({ token, message: `User ${findUserByEmail.email} logged in` });
   } catch (error) {
     next(error);
   }

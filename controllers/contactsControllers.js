@@ -10,8 +10,9 @@ import {
   updateFavoriteSchema,
 } from "../schemas/contactsSchemas.js";
 
-export const getAllContacts = async (_, res, next) => {
+export const getAllContacts = async (req, res, next) => {
   try {
+    console.log(req.user);
     const allContacts = await Contact.find();
     res.json(allContacts);
   } catch (error) {

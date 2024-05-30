@@ -7,21 +7,27 @@ import {
   updateContact,
   updateStatusContact,
 } from "../controllers/contactsControllers.js";
+import { authMiddleware } from "../middlewares/auth.js";
 
 const jsonParcer = express.json();
 
 const contactsRouter = express.Router();
 
-contactsRouter.get("/", jsonParcer, getAllContacts);
+contactsRouter.get("/", jsonParcer, authMiddleware, getAllContacts);
 
-contactsRouter.get("/:id", jsonParcer, getOneContact);
+contactsRouter.get("/:id", jsonParcer, authMiddleware, getOneContact);
 
-contactsRouter.delete("/:id", jsonParcer, deleteContact);
+contactsRouter.delete("/:id", jsonParcer, authMiddleware, deleteContact);
 
-contactsRouter.post("/", jsonParcer, createContact);
+contactsRouter.post("/", jsonParcer, authMiddleware, createContact);
 
-contactsRouter.put("/:id", jsonParcer, updateContact);
+contactsRouter.put("/:id", jsonParcer, authMiddleware, updateContact);
 
-contactsRouter.patch("/:id/favorite", jsonParcer, updateStatusContact);
+contactsRouter.patch(
+  "/:id/favorite",
+  jsonParcer,
+  authMiddleware,
+  updateStatusContact
+);
 
 export default contactsRouter;
