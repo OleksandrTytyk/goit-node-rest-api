@@ -1,4 +1,6 @@
 import jwt from "jsonwebtoken";
+import User from "../models/user.js";
+import HttpError from "../helpers/HttpError.js";
 
 export const authMiddleware = (req, res, next) => {
   const authorizationHeaders = req.headers.authorization;
@@ -13,13 +15,27 @@ export const authMiddleware = (req, res, next) => {
     return res.status(401).send({ message: "Not authorized" });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+  jwt.verify(token, process.env.JWT_SECRET, async (err, decode) => {
     if (err) {
       return res.status(401).send({ message: "Not authorized" });
     }
 
-    req.user = { id: decoded.id, email: decoded.email };
+    try {
+      const user = await User.findById(decode.id);
 
-    next();
+      if (user === null) {
+        return next(HttpError(401, "Not authorized!"));
+      }
+
+      if (user.token !== token) {
+        return next(HttpError(401, "Invalid token!"));
+      }
+
+      req.user = { id: decode.id, email: decode.email };
+
+      next();
+    } catch (error) {
+      next(error);
+    }
   });
 };

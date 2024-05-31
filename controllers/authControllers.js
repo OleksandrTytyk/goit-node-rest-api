@@ -55,10 +55,32 @@ export const login = async (req, res, next) => {
       process.env.JWT_SECRET
     );
 
+    await User.findByIdAndUpdate(findUserByEmail._id, { token }, { new: true });
+
     res
       .status(200)
-      .send({ token, message: `User ${findUserByEmail.email} logged in` });
+      .send({ message: `User ${findUserByEmail.email} logged in` });
   } catch (error) {
     next(error);
   }
+};
+
+export const logout = async (req, res, next) => {
+  try {
+    await User.findByIdAndUpdate(req.user.id, { token: null }, { new: true });
+
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const current = async (req, res, next) => {
+  const { id } = req.user;
+  const user = await User.findById(id);
+  console.log(req.user);
+  res.status(200).send({
+    email: user.email,
+    subscription: user.subscription,
+  });
 };
