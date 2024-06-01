@@ -57,9 +57,13 @@ export const login = async (req, res, next) => {
 
     await User.findByIdAndUpdate(findUserByEmail._id, { token }, { new: true });
 
-    res
-      .status(200)
-      .send({ message: `User ${findUserByEmail.email} logged in` });
+    res.status(200).send({
+      token,
+      user: {
+        email: findUserByEmail.email,
+        subscription: findUserByEmail.subscription,
+      },
+    });
   } catch (error) {
     next(error);
   }
