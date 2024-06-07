@@ -1,8 +1,10 @@
 import User from "../models/user.js";
+
 import bcrypt from "bcrypt";
+
 import jwt from "jsonwebtoken";
 
-import HttpError from "../helpers/HttpError.js";
+import gravatar from "gravatar";
 
 export const register = async (req, res, next) => {
   try {
@@ -16,13 +18,16 @@ export const register = async (req, res, next) => {
 
     const passwordHash = await bcrypt.hash(password, 10);
 
+    const baseAvatar = gravatar.url(email, { protocol: "https" });
+
     const user = await User.create({
       email,
       password: passwordHash,
       subscription,
+      avatarURL: baseAvatar,
     });
 
-    res.status(201).send({ message: `User ${user.email} created` });
+    res.status(201).send({ message: `User ${user.email} created`, user });
   } catch (error) {
     next(error);
   }
@@ -86,5 +91,6 @@ export const current = async (req, res, next) => {
   res.status(200).send({
     email: user.email,
     subscription: user.subscription,
+    avatarURL: user.avatarURL,
   });
 };

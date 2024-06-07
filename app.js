@@ -6,6 +6,7 @@ import "dotenv/config";
 import "./db/db.js";
 import contactsRouter from "./routes/contactsRouter.js";
 import authRouter from "./routes/authRouter.js";
+import path from "node:path";
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
 
+app.use("/avatars", express.static(path.resolve("public/avatars")));
 app.use("/api/contacts", contactsRouter);
 app.use("/api/users", authRouter);
 
