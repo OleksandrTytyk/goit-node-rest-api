@@ -18,9 +18,11 @@ export const changeAvatar = async (req, res, next) => {
 
     await fs.rename(req.file.path, newPath);
 
+    const avatarURL = path.posix.join("/avatars", req.file.filename);
+
     const updatedUser = await User.findByIdAndUpdate(
       req.user.id,
-      { avatarURL: `/avatars/${req.file.filename}` },
+      { avatarURL: avatarURL },
       { new: true }
     );
 
