@@ -5,11 +5,14 @@ import {
   login,
   logout,
   register,
+  repeatVerifyEmail,
+  verifyEmail,
 } from "../controllers/authControllers.js";
 
 import { authMiddleware } from "../middlewares/auth.js";
 
 import { changeAvatar } from "../controllers/userControllers.js";
+
 import { upload } from "../middlewares/upload.js";
 
 const jsonParcer = express.json();
@@ -30,5 +33,9 @@ authRouter.patch(
   upload.single("avatarURL"),
   changeAvatar
 );
+
+authRouter.get("/verify/:verificationToken", verifyEmail);
+
+authRouter.post("/verify", jsonParcer, repeatVerifyEmail);
 
 export default authRouter;
